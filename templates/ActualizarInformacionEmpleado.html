@@ -1,0 +1,218 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <title>Gestion de empleados</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{% static "styles/administrador.css" %}">
+
+    <script src="{% static "js/app.js" %}"></script>
+</head>
+
+<body class="vw-100 vh-100">
+
+  <!-- sidebar -->
+  <main class="row p-0 m-0 h-100 justify-content-center text-center ">
+    <section class="col col-2 bg-gray-100 p-0 m-0 d-flex flex-column">
+        <div class="p-3 border-bottom ">
+            <label>Bienvenido {{empleado.nombre_empleado}}</label>
+        </div>
+        <article class="h-100 p-3  text-start d-flex flex-column gap-3">
+            <a href='/empleado/verInformacion/{{empleado.id_empleado}}' class='text-decoration-none text-black '><div class="hover menu-opciones p-2">Visualizar Informacion</div></a>
+            <a href='/empleado/actualizarInformacion/{{empleado.id_empleado}}' class='text-decoration-none text-black bg-gray-300 rounded'><div class="hover menu-opciones p-2">Actualizar Informacion</div></a>
+        </article>
+
+        <article class="p-2 border-top ">
+            <div class="hover p-2 ">
+                <a href="/" class="text-decoration-none text-black ">
+                    Cerrar Sesion
+                </a>
+            </div>
+        </article>
+    </section>
+    <section class="col col-10 p-5 vh-100 overflow-auto">
+      <article class='bg-gray-100 rounded py-4 px-5'>
+
+        {% if actualizar %}
+          <form method='POST'>
+            {% csrf_token %}
+            {% comment %} APARTADO DE INFORMACION PERSONAL {% endcomment %}
+            <div class='row m-0 px-3'>
+              <h2 class='p-2 m-0 text-start '>Informacion Personal</h2>
+              {% comment %} Fila 1 {% endcomment %}
+              <div class='row m-0 p-0 '>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputNombre" class="form-label p-0 m-0 fw-semibold ">Nombre Completo del empleado</label>
+                  <input value='{{formularioEmpleado.nombre_empleado.value}}' name='form_nombre_empleado' type="text" class="form-control form-floating " id="inputNombre" placeholder='Ingresa el nombre completo...' required>
+                </div>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for "inputRut" class="form-label p-0 m-0 fw-semibold ">Rut del empleado</label>
+                  <input value='{{formularioEmpleado.rut_empleado.value}}' name='form_rut_empleado' type="text" class="form-control" id="inputRut" placeholder='Ingresa el Rut (12345678-9)...' maxlength='10' disabled required>
+                  <input type="hidden" name="form_rut_empleado_hidden" value='{{formularioEmpleado.rut_empleado.value}}'>
+                </div>
+              </div>
+              {% comment %} Fila 2 {% endcomment %}
+              <div class='row p-0 m-0 '>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputGenero" class="form-label p-0 m-0 fw-semibold ">Genero del empleado</label>
+                  <select name='form_genero_empleado' class="form-select" id='inputGenero' required>
+                    <option value=''  disabled>Selecciona el genero...</option>
+                    <option value='{{formularioEmpleado.genero_empleado.value}}' selected>{{formularioEmpleado.genero_empleado.value}}</option>
+                    <option value="recursos humanos">Masculino</option>
+                    <option value="empleado">Femenino</option>
+                  </select>
+                </div>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputTelefono" class="form-label p-0 m-0 fw-semibold ">Telefono del empleado</label>
+                  <div class='input-group'>
+                    <div class="input-group-text">+56</div>
+                    <input value='{{formularioEmpleado.telefono_empleado.value}}' name='form_telefono_empleado' type="number" class="form-control " id="inputTelefono" placeholder='Ingresa el telefono...' required>
+                  </div>
+                </div>
+              </div>
+              {% comment %} Fila 3 {% endcomment %}
+              <div class='row p-0 m-0 '>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputDireccion" class="form-label p-0 m-0 fw-semibold ">Direccion del empleado</label>
+                  <input value='{{formularioEmpleado.direccion_empleado.value}}'  name='form_direccion_empleado' type="text" class="form-control" id="inputDireccion" placeholder='Ingresa la direccion...' required>
+                </div>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                </div>
+              </div>
+            </div>
+    
+            {% comment %} APARTADO DE INFORMACION lABORAL {% endcomment %}
+            <div class='row m-0 px-3 pt-5'>
+              <h2 class='p-2 m-0 text-start '>Informacion Laboral</h2>
+              {% comment %} Fila 1 {% endcomment %}
+              <div class='row m-0 p-0 '>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputDepartamento" class="form-label p-0 m-0 fw-semibold ">Departamento del empleado</label>
+                  <input value='{{formularioDepartamento.nombre_departamento.value}}'  name='form_nombre_departamento' type="text" class="form-control" id="inputDepartamento" placeholder='Ingresa el nombre del departamento...' disabled required>
+                  <input type="hidden" name="form_nombre_departamento_hidden" value='{{formularioDepartamento.nombre_departamento.value}}'>
+                </div>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputFechaIngreso" class="form-label p-0 m-0 fw-semibold ">Fecha de Ingreso</label>
+                  <input value='{{formularioLaboral.fecha_ingreso.value|date:"Y-m-d"}}' name='form_fecha_ingreso' type="date" class="form-control" id="inputFechaIngreso" placeholder='Ingresa la fecha de ingreso...' disabled required>
+                  <input type="hidden" name="form_fecha_ingreso_hidden" value='{{formularioLaboral.fecha_ingreso.value|date:"Y-m-d"}}'>
+                </div>
+              </div>
+              {% comment %} Fila 2 {% endcomment %}
+              <div class='row p-0 m-0 '>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputArea" class="form-label p-0 m-0 fw-semibold ">Area del empleado</label>
+                  <input value='{{formularioArea.nombre_area.value}}' name='form_nombre_area' type="text" class="form-control" id="inputArea" placeholder='Ingresa el nombre del area...' disabled required>
+                  <input type="hidden" name="form_nombre_area_hidden" value='{{formularioAlea.nombre_area.value}}'>
+                </div>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputCargo" class="form-label p-0 m-0 fw-semibold ">Cargo del empleado</label>
+                  <input value='{{formularioCargo.nombre_cargo.value}}' name='form_nombre_cargo' type="text" class="form-control" id="inputCargo" placeholder='Ingresa el nombre del cargo...' disabled required>
+                  <input type="hidden" name="form_nombre_cargo_hidden" value='{{formularioCargo.nombre_cargo.value}}'>
+                </div>
+              </div>
+            </div>
+    
+            {% comment %} APARTADO DE CONTACTO DE EMERGENCIA {% endcomment %}
+            <div class='row m-0 px-3 py-5'>
+              <h2 class='p-2 m-0 text-start '>Contacto de Emergencia</h2>
+              {% comment %} Fila 1 {% endcomment %}
+              <div class='row m-0 p-0 '>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputNombre" class="form-label p-0 m-0 fw-semibold ">Nombre Completo del contacto</label>
+                  <input value='{{formularioContacto.nombre_contacto.value}}' name='form_nombre_contacto' type="text" class="form-control form-floating " id="inputNombre" placeholder='Ingresa el nombre completo...' required>
+                </div>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputRelacion" class="form-label p-0 m-0 fw-semibold ">Relacion con el empleado</label>
+                  <input value='{{formularioContacto.relacion_contacto.value}}' name='form_relacion_contacto' type="text" class="form-control" id="inputRelacion" placeholder='Ingresa la relacion con el empleado...' required>
+                </div>
+              </div>
+              {% comment %} Fila 2 {% endcomment %}
+              <div class='row p-0 m-0 '>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputTelefono" class="form-label p-0 m-0 fw-semibold ">Telefono del contacto</label>
+                  <div class='input-group'>
+                    <div class="input-group-text">+56</div>
+                    <input value='{{formularioContacto.telefono_contacto.value}}' name='form_telefono_contacto' type="number" class="form-control " id="inputTelefono" placeholder='Ingresa el telefono...' required>
+                  </div>
+                </div>
+              </div>
+            </div>
+    
+            {% comment %} APARTADO DE CARGAS FAMILIARES {% endcomment %}
+            <div class='row m-0 px-3'>
+              {% comment %} Fila 1 {% endcomment %}
+              <div class='row m-0 p-0 '>
+                <div class="col-md-6 text-start px-2 py-3 m-0 align-self-end ">
+                  <h2 class='p-0 m-0 text-start'>Cargas Familiares</h2>
+                  {% comment %} <input name="" id="btnAgregarCarga" class="btnAgregarCarga btn btn-secondary p-2 m-0 h-75" type="button" value="Agregar Carga Familiar" disabled >
+                  <input name="" id="btnEliminarCarga" class="btnEliminarCarga btn btn-secondary p-2 m-0 h-75 " type="button" value="Eliminar Carga Familiar" disabled > {% endcomment %}
+                </div>
+                <div class="col-md-6 text-start px-2 py-3 m-0 ">
+                  <label for="inputCargasFamiliares" class="form-label p-0 m-0 fw-semibold">Cantidad de Cargas Familiares</label>
+                  <input value='{{cantidadCargas}}' name='form_cantidad_cargas' type="number" id="inputCargasFamiliares" class="form-control w-25 ml-2" min="0" max="5" disabled >
+                </div>
+              </div>
+              <div class='p-0 m-0 cargas-familiares-container'>
+                {% for form in formularioCargas %}
+                  <h3 class='p-2 m-0 text-start'>Carga Familiar {{forloop.counter}}</h3>
+                  <div class='row m-0 p-0 '>
+                    <div class="col-md-6 text-start px-2 py-3 m-0">
+                      <label for="inputNombre{{forloop.counter}}" class="form-label p-0 m-0 fw-semibold">Nombre Completo de la carga familiar</label>
+                      <input value="{{form.nombre_carga.value}}" name="form_nombre_cargaRegistrada{{forloop.counter}}" type="text" class="form-control" id="inputNombre${index}" placeholder='Ingresa el nombre completo...' required>
+                    </div>
+                    <div class="col-md-6 text-start px-2 py-3 m-0">
+                      <label for="inputRut{{forloop.counter}}" class="form-label p-0 m-0 fw-semibold">Rut de la carga familiar</label>
+                      <input value="{{form.rut_carga.value}}" name="form_rut_carga{{forloop.counter}}" type="text" class="form-control" id="inputRut{{forloop.counter}}" placeholder='Ingresa el Rut (12345678-9)...'disabled  required>
+                      <input type="hidden" name="form_rut_cargaRegistrada{{forloop.counter}}_hidden" value='{{form.rut_carga.value}}'>
+                    </div>
+                  </div>
+                    <div class='row m-0 p-0 '>
+                      <div class="col-md-6 text-start px-2 py-3 m-0">
+                        <label for="inputGenero{{forloop.counter}}" class="form-label p-0 m-0 fw-semibold">Genero de la carga familiar</label>
+                        <select name="form_genero_cargaRegistrada{{forloop.counter}}" class="form-select" id="inputGenero{{forloop.counter}}" required>
+                            <option value="" disabled selected>Selecciona el genero...</option>
+                            <option value="{{form.genero_carga.value}}" selected>{{form.genero_carga.value}}</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                        </select>
+                      </div>
+                      <div class="col-md-6 text-start px-2 py-3 m-0">
+                        <label for="inputParentesco{{forloop.counter}}" class="form-label p-0 m-0 fw-semibold">Parentesco con el empleado</label>
+                        <input value="{{form.parentesco_carga.value}}" name="form_parentesco_cargaRegistrada{{forloop.counter}}" type="text" class="form-control" id="inputParentesco{{forloop.counter}}" placeholder='Ingresa el parentesco con el empleado...' required>
+                      </div>
+                    </div>
+                {% endfor %}
+              </div>
+              <a href="#" class='pt-5'>
+                <button type='submit' class="btn btn-secondary px-3 py-2 ">ACTUALIZAR INFORMACION</button>
+              </a>
+            </div>
+          </form>
+        {% endif %}
+
+      </article>
+    </section>
+
+  </main>
+  <footer>
+    <!-- place footer here -->
+  </footer>
+  <!-- Bootstrap JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</body>
+
+</html>

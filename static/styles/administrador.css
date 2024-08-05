@@ -1,0 +1,49 @@
+.bg-gray{
+    background-color: #6c757d;
+}
+.bg-gray-dark{
+    background-color: #343a40;
+}
+.bg-gray-100{
+    background-color: #f8f9fa;
+}
+.bg-gray-200{
+    background-color: #e9ecef;
+}
+.bg-gray-300{
+    background-color: #dee2e6;
+}
+.bg-gray-400{
+    background-color: #ced4da;
+}
+.bg-gray-500{
+    background-color: #adb5bd;
+}
+.bg-gray-600{
+    background-color: #6c757d;
+}
+.bg-gray-700{
+    background-color: #495057;   
+}
+.bg-gray-800{
+    background-color: #343a40;
+}
+.bg-gray-900{
+    background-color: #212529;
+}
+
+body {
+    height: 100vh !important;
+    width: 100vw !important;
+    overflow: hidden !important;
+  }  
+
+.hover:hover{
+    background-color: #dee2e6;
+    border-radius: 5px;
+}
+
+.activo{
+    background-color: #dee2e6;
+    border-radius: 5px;
+}
